@@ -4,8 +4,9 @@ using OnlineBookStore.DataAccess.Data;
 using OnlineBookStore.Models;
 
 
-namespace OnlineBookStore.Controllers
+namespace OnlineBookStore.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -40,29 +41,32 @@ namespace OnlineBookStore.Controllers
             //InCaseOf Different Controller return RedirectToAction("Action","Controller")
         }
         [HttpGet]
-        public IActionResult Edit(int? id) {
-            if (id == null || id == 0) { 
-             return NotFound();
+        public IActionResult Edit(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
             }
-            Category? categoryFromDb = _unitOfWork.Category.Get(u=>u.Id==id);
+            Category? categoryFromDb = _unitOfWork.Category.Get(u => u.Id == id);
             //Category? categoryFromDb1 = _db.Categories.FirstOrDefault(c => c.Id == id);
             //Category? categoryFromDb2 = _db.Categories.Where(c => c.Id == id).FirstOrDefault();
             if (categoryFromDb == null)
             {
                 return NotFound();
             }
-            return View(categoryFromDb); 
+            return View(categoryFromDb);
         }
         [HttpPost]
-        public IActionResult Edit(Category obj) { 
-            if(ModelState.IsValid)
+        public IActionResult Edit(Category obj)
+        {
+            if (ModelState.IsValid)
             {
                 _unitOfWork.Category.Update(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "Category Updated Successfully";
                 return RedirectToAction("Index");
             }
-        return View(obj);
+            return View(obj);
         }
 
         [HttpGet]
@@ -81,13 +85,13 @@ namespace OnlineBookStore.Controllers
         }
 
 
-        [HttpPost,ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
             Category? obj = _unitOfWork.Category.Get(u => u.Id == id);
             if (obj == null)
             {
-                
+
                 return NotFound();
             }
             _unitOfWork.Category.Remove(obj);

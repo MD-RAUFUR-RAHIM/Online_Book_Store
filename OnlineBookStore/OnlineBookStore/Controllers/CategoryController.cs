@@ -1,19 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineBookStore.Data;
+using OnlinBookStore.DataAccess.Repository.IRepository;
+using OnlineBookStore.DataAccess.Data;
 using OnlineBookStore.Models;
+
 
 namespace OnlineBookStore.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            List<Category> objCategoryList = _db.Categories.ToList();
+            List<Category> objCategoryList = _unitOfWork.Category.GetAll().ToList();
             return View(objCategoryList);
         }
         public IActionResult Create()
@@ -29,8 +31,8 @@ namespace OnlineBookStore.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(obj);
-                _db.SaveChanges();
+                _unitOfWork.Category.Add(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Category Created Successfully";
                 return RedirectToAction("Index");
             }
@@ -42,7 +44,7 @@ namespace OnlineBookStore.Controllers
             if (id == null || id == 0) { 
              return NotFound();
             }
-            Category? categoryFromDb = _db.Categories.Find(id);
+            Category? categoryFromDb = _unitOfWork.Category.Get(u=>u.Id==id);
             //Category? categoryFromDb1 = _db.Categories.FirstOrDefault(c => c.Id == id);
             //Category? categoryFromDb2 = _db.Categories.Where(c => c.Id == id).FirstOrDefault();
             if (categoryFromDb == null)
@@ -55,8 +57,8 @@ namespace OnlineBookStore.Controllers
         public IActionResult Edit(Category obj) { 
             if(ModelState.IsValid)
             {
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
+                _unitOfWork.Category.Update(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Category Updated Successfully";
                 return RedirectToAction("Index");
             }
@@ -70,7 +72,7 @@ namespace OnlineBookStore.Controllers
             {
                 return NotFound();
             }
-            Category? categoryFromDb = _db.Categories.Find(id);
+            Category? categoryFromDb = _unitOfWork.Category.Get(u => u.Id == id);
             if (categoryFromDb == null)
             {
                 return NotFound();
@@ -82,14 +84,14 @@ namespace OnlineBookStore.Controllers
         [HttpPost,ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
-            Category? obj = _db.Categories.Find(id);
+            Category? obj = _unitOfWork.Category.Get(u => u.Id == id);
             if (obj == null)
             {
                 
                 return NotFound();
             }
-            _db.Categories.Remove(obj);
-            _db.SaveChanges();
+            _unitOfWork.Category.Remove(obj);
+            _unitOfWork.Save();
             TempData["success"] = "Category Deleted Successfully";
             return RedirectToAction("Index");
         }

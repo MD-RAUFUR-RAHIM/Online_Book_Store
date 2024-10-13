@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnlineBookStore.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace OnlinBookStore.DataAccess.Repository.IRepository
 {
-    public interface IUnitOfWork
+    public interface IProductRepo: IRepository<Product>
     {
-        ICategoryRepo Category { get; }
-        IProductRepo Product { get; }
-        void Save();
+        void Update(Product obj);
+        
     }
 }

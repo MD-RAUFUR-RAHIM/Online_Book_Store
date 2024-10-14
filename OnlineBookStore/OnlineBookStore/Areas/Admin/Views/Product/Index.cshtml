@@ -20,7 +20,7 @@
             </h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="Product" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle-fill"></i> CREATE NEW PRODUCT</a>
+            <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary"><i class="bi bi-plus-circle-fill"></i> CREATE NEW PRODUCT</a>
         </div>
     </div>
         <table class="table table-bordered table-striped">
@@ -47,7 +47,7 @@
                         </td>
                         <td>
                             <div class="w-75 btn-group" role="group">
-                                <a asp-controller="Product" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                                <a asp-controller="Product" asp-action="Upsert" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
                                     <i class="bi bi-pencil-square"></i> Edit
                                 </a>
 
